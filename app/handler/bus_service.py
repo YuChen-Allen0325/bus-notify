@@ -2,6 +2,7 @@ import requests
 import gzip
 import io
 import json
+from app.handler.utils import safe_slice
 from app.config import BusConfig
 
 def get_routeId_by_bus_number(bus_number):
@@ -41,8 +42,8 @@ def get_bus_stops_to_notify(routeId, stopZh):   # 前3-5站  10785,   博仁醫�
         
         if dest_idx is None:  # 找不到站點
             return []
-
-    return arr[dest_idx-5:dest_idx-2]  # 前 3-5 站
+    
+    return safe_slice(arr, dest_idx-5, dest_idx-2)  # 前 3-5 站
 
 
 def get_bus_event(BusID):

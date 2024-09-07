@@ -23,7 +23,7 @@ CONF = {
             'class': 'logging.handlers.TimedRotatingFileHandler',
             'when': 'midnight',
             'backupCount': 2,
-            'filename': 'installation-process-listener.log',
+            'filename': 'bus_notify.log',
         }
     },
     'loggers': {

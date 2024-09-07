@@ -11,10 +11,10 @@ def notify(table_id, bus_number, destination, BusID, email):  ## 將通知及查
 
     for i in info_stops:
         stop_name, notify_stop_id = i
-        if notify_stop_id == current_bus_stop_id:   ## 提醒站點
+        if notify_stop_id == int(current_bus_stop_id):   ## 提醒站點
             send_email(email)
             pgsql.update_notify_flag(table_id)  ## 通知成功把notify_flag 更新為 1
-
+            break
 
 async def do_async_notify(table_id, bus_number, destination, BusID, email):
     await asyncio.to_thread(notify, table_id, bus_number, destination, BusID, email)    # 使用to_thread來處理IO耗時很久問題, 注意傳參比較特別
