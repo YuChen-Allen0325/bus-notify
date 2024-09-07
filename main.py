@@ -1,6 +1,5 @@
 import asyncio
 import logging.config
-
 from app.adaptor import pgsql
 from app import logging_config
 from app.handler.notify import do_async_notify
@@ -8,20 +7,24 @@ from app.handler.notify import do_async_notify
 
 log = logging.getLogger(__name__)
 
-def main():
+async def main():
+
     logging.config.dictConfig(logging_config.CONF)
     pgsql.init()
-    # task1 = asyncio.create_task(do_async_notify('672', '博仁醫院', 'FAA-162'))
-    # task2 = asyncio.create_task(do_async_notify('672', '博仁醫院', 'FAA-162'))
-    # task3 = asyncio.create_task(do_async_notify('672', '博仁醫院', 'FAA-162'))
-    # await asyncio.gather(task1, task2, task3)
+
+    while True:
+        tasks = []
+        notify_informations = pgsql.get_user_reservation_information()
+
+        for notify_information in notify_informations:   ## 創建通知任務list
+            id = notify_information.get('id')
+            bus_number = notify_information.get('bus_number')
+            destination_stop = notify_information.get('destination_stop')
+            bus_id = notify_information.get('bus_id')
+            email = notify_information.get('email')
+            tasks.append(asyncio.create_task(do_async_notify(id, bus_number, destination_stop, bus_id, email)))
+
+        await asyncio.gather(*tasks)
 
 
-
-    # while True:
-    a = pgsql.get_user_reservation_information()
-    print(a)
-    for i in a:
-        print(i.get('bus_number'))
-main()
-# asyncio.run(main())
+asyncio.run(main())

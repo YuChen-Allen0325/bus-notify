@@ -58,8 +58,8 @@ def commit(sql_string, sql_args):
     except Exception as e:
         _connection.rollback()
 
-def get_user_reservation_information():
-    try:
+def get_user_reservation_information():   ## notify_flag = 0 代表還未通知過
+    try: 
         sql_stmt = """
             SELECT * 
             FROM bus_notify_information
@@ -73,4 +73,24 @@ def get_user_reservation_information():
         init()
         return query(sql_stmt, data)
     except Exception as e:
-        log.error(f"get_outdoor_event_by_hr_criminal_serial_id error: {e}")
+        log.error(f"get_user_reservation_information error: {e}")
+
+
+def update_notify_flag(id):
+    try:
+        sql_stmt = """
+            UPDATE bus_notify_information
+            SET notify_flag = 1
+            WHERE id = %(id)s
+        """
+
+        data = {
+            'id': id
+        }
+
+        commit(sql_stmt, data)
+    except (psycopg2.InterfaceError, psycopg2.OperationalError)as e:
+        init()
+        commit(sql_stmt, data)
+    except Exception as e:
+        log.error(f'update_notify_flag error: {e}')
