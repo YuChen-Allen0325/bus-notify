@@ -2,10 +2,11 @@ import asyncio
 import logging.config
 from app.adaptor import pgsql
 from app import logging_config
-from app.handler.notify import do_async_notify
+from app.handler.bus_notify import do_async_notify
 
 
 log = logging.getLogger(__name__)
+
 
 async def main():
 

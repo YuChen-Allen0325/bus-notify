@@ -1,5 +1,6 @@
 import asyncio
 from app.adaptor import pgsql
+from app.handler.gmail_service import send_email
 from app.handler.bus_service import notify_info, get_bus_event
 
 def notify(table_id, bus_number, destination, BusID, email):  ## 將通知及查詢即時資訊包成一個耗時很久的工作
@@ -11,9 +12,7 @@ def notify(table_id, bus_number, destination, BusID, email):  ## 將通知及查
     for i in info_stops:
         stop_name, notify_stop_id = i
         if notify_stop_id == current_bus_stop_id:   ## 提醒站點
-            #####
-            ##### 通知區
-            #####
+            send_email(email)
             pgsql.update_notify_flag(table_id)  ## 通知成功把notify_flag 更新為 1
 
 
